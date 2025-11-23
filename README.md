@@ -1,3 +1,4 @@
 # mini_cash
 
-A new Flutter project.
+In this project I want to teach most things, i.e. freezed, sql, websocket, and many more
+
