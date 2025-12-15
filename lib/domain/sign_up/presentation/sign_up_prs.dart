@@ -86,7 +86,6 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
     final state = ref.watch(signUpControllerProvider);
     final isLoading = state.isLoading;
 
-    // Слухаємо успішну реєстрацію
     ref.listen<bool>(
       signUpControllerProvider.select((s) => s.isSignUpSuccess??false),
       (previous, next) {
@@ -122,7 +121,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
         key: _formKey,
         child: ListView(
           children: [
-            _buildTextField(
+            SignUpTextField(
               controller: _nameController,
               label: 'Name',
               icon: Icons.person,
@@ -130,7 +129,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
                   v == null || v.isEmpty ? 'Please enter your name' : null,
             ),
             const SizedBox(height: kMedium),
-            _buildTextField(
+            SignUpTextField(
               controller: _emailController,
               label: 'Email',
               icon: Icons.email,
@@ -144,7 +143,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            _buildTextField(
+            SignUpTextField(
               controller: _passwordController,
               label: 'Password',
               icon: Icons.lock,
@@ -158,7 +157,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            _buildTextField(
+            SignUpTextField(
               controller: _confirmPasswordController,
               label: 'Confirm Password',
               icon: Icons.lock,
@@ -192,26 +191,26 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool obscure = false,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label.hardcoded,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
-        ),
-        prefixIcon: Icon(icon),
-      ),
-    );
-  }
+  // Widget _buildTextField({
+  //   required TextEditingController controller,
+  //   required String label,
+  //   required IconData icon,
+  //   bool obscure = false,
+  //   String? Function(String?)? validator,
+  // }) {
+  //   return TextFormField(
+  //     controller: controller,
+  //     obscureText: obscure,
+  //     validator: validator,
+  //     decoration: InputDecoration(
+  //       labelText: label.hardcoded,
+  //       border: const OutlineInputBorder(
+  //         borderRadius: BorderRadius.all(Radius.circular(kSmall)),
+  //       ),
+  //       prefixIcon: Icon(icon),
+  //     ),
+  //   );
+  // }
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
@@ -235,4 +234,36 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
 
 extension on String {
   String get hardcoded => toUpperCase();
+}
+class SignUpTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final bool obscure;
+  final String? Function(String?)? validator;
+
+  const SignUpTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.obscure = false,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label.hardcoded,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
+        ),
+        prefixIcon: Icon(icon),
+      ),
+    );
+  }
 }

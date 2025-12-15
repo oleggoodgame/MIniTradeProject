@@ -1,3 +1,7 @@
-# mini_cash
-
-A new Flutter project.
+1) Log in Presentation поміняти +
+2) Sign Up поміняти +
+3) подивитись чи нормально працює go route - працює погано
+4) webSocket поміняти +-
+5) перевірити весь код +
+6) почати вчити  FL Chart +
+7) додати новини +

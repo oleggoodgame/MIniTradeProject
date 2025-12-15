@@ -32,7 +32,6 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
     final state = ref.watch(logInControllerProvider);
     final isLoading = state.isLoading;
 
-    // ✅ слухаємо помилки
     ref.listen<String?>(logInControllerProvider.select((s) => s.error), (
       previous,
       next,
@@ -44,16 +43,13 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
       }
     });
 
-    // ✅ слухаємо успішний логін
     ref.listen<LogInState>(logInControllerProvider, (previous, next) {
       if (next.isLogInSucces == true && next.user != null) {
         final user = next.user!;
         print("Login listener user: $user");
 
-        // зберігаємо акаунт правильно
         ref.read(accountProvider.notifier).setAccount(user);
 
-        // переходимо на home
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
           context.go('/home');
@@ -67,7 +63,7 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
         key: _formKey,
         child: ListView(
           children: [
-            _buildTextField(
+            AuthTextField(
               controller: _emailController,
               label: 'Email',
               icon: Icons.email,
@@ -81,7 +77,7 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            _buildTextField(
+            AuthTextField(
               controller: _passwordController,
               label: 'Password',
               icon: Icons.lock,
@@ -102,12 +98,12 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text('Log In'.hardcoded),
+                  : Text('Log In'),
             ),
             const SizedBox(height: kExtraLarge),
             TextButton(
               onPressed: () => context.go('/sign_up'),
-              child: Text("Don't have an account? Sign Up".hardcoded),
+              child: Text("Don't have an account? Sign Up"),
             ),
           ],
         ),
@@ -115,26 +111,7 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool obscure = false,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label.hardcoded,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
-        ),
-        prefixIcon: Icon(icon),
-      ),
-    );
-  }
+ 
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
@@ -153,6 +130,35 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
   }
 }
 
-extension on String {
-  String get hardcoded => this;
+class AuthTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final bool obscure;
+  final String? Function(String?)? validator;
+
+  const AuthTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.obscure = false,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
+        ),
+        prefixIcon: Icon(icon),
+      ),
+    );
+  }
 }

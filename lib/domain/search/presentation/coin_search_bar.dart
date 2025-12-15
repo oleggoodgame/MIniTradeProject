@@ -21,7 +21,7 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
     controller = TextEditingController();
 
     controller.addListener(() {
-      setState(() {}); // оновлює пошук у реальному часі
+      setState(() {}); 
     });
   }
 

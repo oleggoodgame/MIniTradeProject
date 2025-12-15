@@ -22,6 +22,7 @@ class DatabaseService {
   }
 
   Future<Account?> getProfile(String uid) async {
+    print("Fetching profile for UID: $uid");
     final doc = await _db.collection("users").doc(uid).get();
     if (doc.exists) {
       final data = doc.data()!;

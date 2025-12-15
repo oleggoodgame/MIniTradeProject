@@ -4,20 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:mini_cash/domain/search/model/coin_model.dart';
 import 'package:mini_cash/domain/search/repository/search_repository.dart';
 
-// Це provider, який повертає CoinModel із останньою ціною
 final coinSearchProvider = FutureProvider.family<List<CoinModel>, String>((ref, query) async {
   if (query.isEmpty) return [];
 
   final repo = ref.read(coinsRepositoryProvider);
   final coins = await repo.searchCoins(query);
 
-  // Якщо allPricesProvider вже має value — використаємо його швидко
   final pricesAsync = ref.read(allPricesProvider);
   Map<String,double> prices = {};
   if (pricesAsync is AsyncData<Map<String,double>>) {
     prices = pricesAsync.value;
   } else {
-    // Якщо нема — дочекаємось першого (опціонально, можна пропустити)
     prices = await ref.watch(allPricesProvider.future);
   }
 

@@ -5,9 +5,9 @@ import 'package:mini_cash/domain/log_in/data/sources/log_in_api.dart';
 import 'package:mini_cash/domain/log_in/repository/ilog_in_repository.dart';
 
 final logInRepositoryProvider = Provider.autoDispose<IlogInRepository>((ref) {
-  final signUpApi = ref.watch(logInApiProvider);
+  final logInAPI = ref.watch(logInApiProvider);
 
-  return LogInRepository(signUpApi);
+  return LogInRepository(logInAPI);
 });
 
 class LogInRepository implements IlogInRepository {
