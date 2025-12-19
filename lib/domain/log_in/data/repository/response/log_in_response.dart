@@ -14,4 +14,7 @@ class LogInResponse with _$LogInResponse {
 
   factory LogInResponse.fromJson(Map<String, dynamic> json) =>
       _$LogInResponseFromJson(json);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

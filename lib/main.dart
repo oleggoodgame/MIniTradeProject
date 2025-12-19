@@ -9,7 +9,8 @@ import 'package:mini_cash/navigation/go_route.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mini_cash/presentation/providers/account_provider.dart';
-import 'package:mini_cash/websocket/binance_websokcet.dart';
+import 'package:mini_cash/websocket/binance_price_websocket.dart';
+import 'package:mini_cash/websocket/binance_prices_websokcet.dart';
 // import 'dart:collection';
 
 void main() async {
@@ -112,9 +113,12 @@ class _MainAppState extends ConsumerState<MainApp> {
 
     return MaterialApp.router(routerConfig: router);
   }
+
   @override
   void dispose() {
     ref.read(pricesProvider.notifier).dispose();
+    // ref.read(priceStreamProvider.notifier).dispose();
+
     super.dispose();
   }
 }

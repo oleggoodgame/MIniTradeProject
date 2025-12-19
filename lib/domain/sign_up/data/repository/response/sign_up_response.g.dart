@@ -6,8 +6,8 @@ part of 'sign_up_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SignUpResponseImpl _$$SignUpResponseImplFromJson(Map<String, dynamic> json) =>
-    _$SignUpResponseImpl(
+_SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
+    _SignUpResponse(
       uid: json['uid'] as String,
       email: json['email'] as String,
       name: json['name'] as String?,
@@ -17,12 +17,11 @@ _$SignUpResponseImpl _$$SignUpResponseImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['createdAt'] as String),
     );
 
-Map<String, dynamic> _$$SignUpResponseImplToJson(
-  _$SignUpResponseImpl instance,
-) => <String, dynamic>{
-  'uid': instance.uid,
-  'email': instance.email,
-  'name': instance.name,
-  'isLoggedIn': instance.isLoggedIn,
-  'createdAt': instance.createdAt?.toIso8601String(),
-};
+Map<String, dynamic> _$SignUpResponseToJson(_SignUpResponse instance) =>
+    <String, dynamic>{
+      'uid': instance.uid,
+      'email': instance.email,
+      'name': instance.name,
+      'isLoggedIn': instance.isLoggedIn,
+      'createdAt': instance.createdAt?.toIso8601String(),
+    };

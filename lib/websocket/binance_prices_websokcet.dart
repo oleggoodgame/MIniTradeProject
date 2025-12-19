@@ -51,25 +51,32 @@ class PricesStreamNotifier extends StreamNotifier<Map<String, double>> {
     if (response.statusCode != 200) return {};
 
     final List data = jsonDecode(response.body);
-    return {
-      for (final e in data)
-        if (symbols.contains(e["symbol"]))
-          e["symbol"]: double.parse(e["price"]),
-    };
+    final Map<String, double> result = {};
+
+    for (final e in data) {
+      final symbol = e["symbol"];
+      if (symbols.contains(symbol)) {
+        final price = double.parse(e["price"]);
+        result[symbol] = price;
+        print("INIT $symbol = $price");
+      }
+    }
+
+    return result;
   }
 
   void subscribe(List<String> symbols) {
     final params = symbols.map((s) => "${s.toLowerCase()}@ticker").toList();
-    _channel?.sink.add(jsonEncode({
-      "method": "SUBSCRIBE",
-      "params": params,
-      "id": 1,
-    }));
+    _channel?.sink.add(
+      jsonEncode({"method": "SUBSCRIBE", "params": params, "id": 1}),
+    );
   }
+
   void dispose() {
     _channel?.sink.close();
   }
 }
+
 // ми цей клас не використовуємо
 // class BinanceWebSocketService {
 //   WebSocketChannel? _channel;

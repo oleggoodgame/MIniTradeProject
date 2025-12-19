@@ -12,4 +12,7 @@ class LogInRequest with _$LogInRequest {
 
   factory LogInRequest.fromJson(Map<String, dynamic> json) =>
       _$LogInRequestFromJson(json);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

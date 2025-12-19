@@ -4,6 +4,7 @@ import 'package:mini_cash/presentation/providers/account_provider.dart';
 import 'package:mini_cash/presentation/providers/isLoading_provider.dart';
 import 'package:mini_cash/presentation/screens/authentication/log_in_screen.dart';
 import 'package:mini_cash/presentation/screens/authentication/sign_up_screen.dart';
+import 'package:mini_cash/presentation/screens/coin_screen.dart';
 import 'package:mini_cash/presentation/screens/home_screen.dart';
 import 'package:mini_cash/presentation/screens/list_trade_screen.dart';
 import 'package:mini_cash/presentation/screens/loading_screen.dart';
@@ -66,6 +67,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home',
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/coin',
+        name: 'coin',
+
+        builder: (context, state) {
+          final coin = state.extra as String;
+          return CoinScreen(symbol: coin);
+        },
       ),
     ],
   );

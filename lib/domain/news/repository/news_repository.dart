@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mini_cash/domain/news/data/repository/request/news_request.dart';
 import 'package:mini_cash/domain/news/data/sources/news_api.dart';

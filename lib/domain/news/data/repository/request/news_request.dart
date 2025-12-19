@@ -13,4 +13,7 @@ class NewsRequest with _$NewsRequest {
 
   factory NewsRequest.fromJson(Map<String, dynamic> json) =>
       _$NewsRequestFromJson(json);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

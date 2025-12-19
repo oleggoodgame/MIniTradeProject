@@ -28,6 +28,12 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
   }
 
   @override
+  void dispose() {
+    _clearControllers();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(logInControllerProvider);
     final isLoading = state.isLoading;
@@ -110,8 +116,6 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
       ),
     );
   }
-
- 
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
