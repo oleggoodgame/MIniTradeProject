@@ -6,7 +6,8 @@ import 'package:mini_cash/domain/coin/provider/f_chart_provider.dart';
 import 'package:mini_cash/domain/coin/repository/ticker_repository.dart';
 
 class CoinPricePresentation extends ConsumerStatefulWidget {
-  const CoinPricePresentation({super.key});
+  final String symbol;
+  const CoinPricePresentation({super.key, required this.symbol});
 
   @override
   ConsumerState<CoinPricePresentation> createState() =>
@@ -14,22 +15,22 @@ class CoinPricePresentation extends ConsumerStatefulWidget {
 }
 
 class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    ref.read(tickerRepositoryProvider.notifier).init("BTCUSDT");
-  }
+  //   ref.read(tickerRepositoryProvider.notifier).init("BTCUSDT");
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final tickerAsync = ref.watch(tickerRepositoryProvider);
+    tickerStreamProvider;
+    final tickerAsync = ref.watch(tickerStreamProvider(widget.symbol));
     // final spots = ref.watch(counterProvider.notifier);
     // final bid_ask = ref.watch(bidAskCounterProvider.notifier);
-    ref.listen(tickerRepositoryProvider, (previous, next) {
+    ref.listen(tickerStreamProvider(widget.symbol), (previous, next) {
       next.whenOrNull(
         data: (ticker) {
-          print("WORKED");
           ref
               .read(bidAskCounterProvider.notifier)
               .addBidAsk(
@@ -38,16 +39,12 @@ class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
                 askQty: ticker.askQty,
                 askPrice: ticker.askPrice,
               );
-          ref.read(counterProvider.notifier).addPrice(ticker.lastPrice);
 
-          //     .read(bidCounterProvider.notifier)
-          //     .addPrice(ticker.bidQty, ticker.bidPrice);
-          // ref
-          //     .read(askCounterProvider.notifier)
-          //     .addPrice(ticker.askQty, ticker.askPrice);
+          ref.read(counterProvider.notifier).addPrice(ticker.lastPrice);
         },
       );
     });
+
     return tickerAsync.when(
       data: (ticker) {
         // spots.addPrice(ticker.lastPrice);

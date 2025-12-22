@@ -6,6 +6,8 @@ import 'package:mini_cash/entity/coin_entity.dart';
 import 'package:mini_cash/websocket/binance_prices_websokcet.dart';
 
 class ListTradePresentation extends ConsumerWidget {
+  const ListTradePresentation({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<List<CoinEntity>>>(userCoinsProvider, (prev, next) {
@@ -20,37 +22,40 @@ class ListTradePresentation extends ConsumerWidget {
     final coinsAsync = ref.watch(userCoinsProvider);
     final pricesAsync = ref.watch(pricesProvider);
 
-    return GestureDetector(
-      onTap: () {
-        context.goNamed('coin', extra: 'BTCUSDT');
-      },
-      child: coinsAsync.when(
-        data: (coins) {
-          return pricesAsync.when(
-            data: (prices) {
-              return ListView(
-                children: coins.map((coin) {
-                  final symbol = coin.symbol;
-                  final price = prices[symbol];
+    return coinsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text("Coins error: $e")),
+      data: (coins) {
+        return pricesAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text("Price error: $e")),
+          data: (prices) {
+            return ListView.builder(
+              itemCount: coins.length,
+              itemBuilder: (context, index) {
+                final coin = coins[index];
+                final symbol = coin.symbol;
+                final price = prices[symbol];
 
-                  return ListTile(
-                    title: Text(symbol),
-                    subtitle: Text(
-                      price != null
-                          ? "Price: ${price.toStringAsFixed(4)}"
-                          : "Loading...",
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text("Price error: $e")),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Coins error: $e")),
-      ),
+                return ListTile(
+                  title: Text(symbol),
+                  subtitle: Text(
+                    price != null
+                        ? "Price: ${price.toStringAsFixed(4)}"
+                        : "Loading...",
+                  ),
+                  onTap: () {
+                    context.pushNamed(
+                      'coin',
+                      extra: coin,
+                    ); 
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

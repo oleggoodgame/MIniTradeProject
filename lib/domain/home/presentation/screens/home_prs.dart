@@ -9,60 +9,49 @@ class HomePresentation extends StatefulWidget {
 }
 
 class _HomePresentationState extends State<HomePresentation> {
-
-
   final List<String> topWatched = [
     "Most watched #1",
     "Most watched #2",
     "Most watched #3",
   ];
 
-  final List<String> savedNews = [
-    "Saved #1",
-    "Saved #2",
-    "Saved #3",
-  ];
+  final List<String> savedNews = ["Saved #1", "Saved #2", "Saved #3"];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Home")),
-      body: Column(
-        children: [
-          
-          // ---------------- NEWS ----------------
-          const Text(
-            "Список новин",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
+    return Column(
+      children: [
+        // ---------------- NEWS ----------------
+        const Text(
+          "Список новин",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
 
-          Expanded(child: const NewsPresentation()),
+        Expanded(child: const NewsPresentation(limit: 10)),
 
-          const SizedBox(height: 32),
+        const SizedBox(height: 32),
 
-          // ---------------- TOP WATCHED ----------------
-          const Text(
-            "Твої найбільше переглянуті за цей тиждень",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
+        // // ---------------- TOP WATCHED ----------------
+        // const Text(
+        //   "Твої найбільше переглянуті за цей тиждень",
+        //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        // ),
+        // const SizedBox(height: 12),
 
-          ...topWatched.map((e) => _topItem(e)),
+        // ...topWatched.map((e) => _topItem(e)),
 
-          const SizedBox(height: 32),
+        // const SizedBox(height: 32),
 
-          // ---------------- SAVED ----------------
-          const Text(
-            "Три збережені",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
+        // ---------------- SAVED ----------------
+        const Text(
+          "Три збережені",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
 
-          ...savedNews.map((e) => _savedItem(e)),
-
-        ],
-      ),
+        ...savedNews.map((e) => _savedItem(e)),
+      ],
     );
   }
 
@@ -70,10 +59,7 @@ class _HomePresentationState extends State<HomePresentation> {
 
   Widget _newsItem(String text) {
     return Card(
-      child: ListTile(
-        title: Text(text),
-        leading: const Icon(Icons.article),
-      ),
+      child: ListTile(title: Text(text), leading: const Icon(Icons.article)),
     );
   }
 
@@ -90,10 +76,7 @@ class _HomePresentationState extends State<HomePresentation> {
   Widget _savedItem(String text) {
     return Card(
       color: Colors.green.shade50,
-      child: ListTile(
-        title: Text(text),
-        leading: const Icon(Icons.bookmark),
-      ),
+      child: ListTile(title: Text(text), leading: const Icon(Icons.bookmark)),
     );
   }
 }

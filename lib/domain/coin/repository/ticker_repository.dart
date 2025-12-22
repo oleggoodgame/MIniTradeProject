@@ -6,21 +6,46 @@ import 'package:mini_cash/domain/coin/repository/iticker_repository.dart';
 import 'package:mini_cash/entity/ticker_entity.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-final tickerRepositoryProvider =
-    StreamNotifierProvider<BinanceCoinRepository, TickerEntity>(
-      () => BinanceCoinRepository(),
+final tickerStreamProvider =
+    StreamNotifierProvider.family<TickerStreamNotifier, TickerEntity, String>(
+      (symbol) => TickerStreamNotifier(symbol: 'BTCUSDT'),
     );
 
-class BinanceCoinRepository extends StreamNotifier<TickerEntity>
-    implements ItickerRepository {
+class TickerStreamNotifier extends StreamNotifier<TickerEntity> {
   WebSocketChannel? _channel;
+  final String symbol;
 
+  TickerStreamNotifier({required this.symbol});
   @override
-  Stream<TickerEntity> build() {
-    ref.onDispose(() {
-      _channel?.sink.close();
-    });
-    return const Stream.empty();
+  Stream<TickerEntity> build() async* {
+    // REST
+    final res = await http.get(
+      Uri.parse('https://api.binance.com/api/v3/ticker/24hr?symbol=$symbol'),
+    );
+
+    yield TickerEntity.fromRestJson(jsonDecode(res.body));
+
+    // WebSocket
+    final channel = WebSocketChannel.connect(
+      Uri.parse("wss://stream.binance.com:9443/ws"),
+    );
+
+    ref.onDispose(() => channel.sink.close());
+
+    channel.sink.add(
+      jsonEncode({
+        "method": "SUBSCRIBE",
+        "params": ["${symbol.toLowerCase()}@ticker"],
+        "id": 1,
+      }),
+    );
+
+    await for (final event in channel.stream) {
+      final json = jsonDecode(event);
+      if (json['e'] != '24hrTicker') continue;
+
+      yield TickerEntity.fromWsJson(json);
+    }
   }
 
   Future<void> init(String symbol) async {

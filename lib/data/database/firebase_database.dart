@@ -51,4 +51,30 @@ class DatabaseService {
       return CoinEntity.fromMap(coin as Map<String, dynamic>);
     }).toList();
   }
+  Future<void> updateFavoritesCoint(CoinEntity coin) async {
+    await _db.collection("users").doc(user!.uid).set({
+      'favorite_coins': FieldValue.arrayUnion([coin.toMap()]),
+    }, SetOptions(merge: true));
+  }
+  Future<List<CoinEntity>> getFavoriteCoins() async {
+    final doc = await _db.collection("users").doc(user!.uid).get();
+    final coins = doc.data()?['favorite_coins'] as List<dynamic>? ?? [];
+
+    return coins.map((coin) {
+      return CoinEntity.fromMap(coin as Map<String, dynamic>);
+    }).toList();
+  }
+
+  Future<void> updateAccountName(String name) async {
+    print('USER ID IN UPDATE FUNCTION: ${user?.uid}');
+    await _db.collection("users").doc(user!.uid).update({
+      'name': name,
+    });
+  }
+
+  Future<void> removeFavoriteCoint(CoinEntity coin) async {
+    await _db.collection("users").doc(user!.uid).set({
+      'favorite_coins': FieldValue.arrayRemove([coin.toMap()]),
+    }, SetOptions(merge: true));
+  }
 }

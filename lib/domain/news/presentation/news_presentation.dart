@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mini_cash/domain/news/model/news_model.dart';
 import 'package:mini_cash/domain/news/presentation/controller/news_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsPresentation extends ConsumerWidget {
-  const NewsPresentation({super.key});
+    final int limit;
 
+  const NewsPresentation({super.key, required this.limit});
+  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(newsControllerProvider);
+    final state = ref.watch(newsControllerProvider(limit));
 
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -39,37 +42,50 @@ class _NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              news.title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              news.description,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                if (news.publisherLogoUrl.isNotEmpty)
-                  SvgPicture.network(news.publisherLogoUrl, height: 24),
-                const SizedBox(width: 8),
-                Text(
-                  news.publisher,
-                  style: const TextStyle(color: Colors.grey),
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () async {
+        final uri = Uri.tryParse(news.homepageUrl);
+
+        if (uri == null) return;
+
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                news.title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                news.description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  if (news.publisherLogoUrl.isNotEmpty)
+                    SvgPicture.network(news.publisherLogoUrl, height: 24),
+                  const SizedBox(width: 8),
+                  Text(
+                    news.publisher,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

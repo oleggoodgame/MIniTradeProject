@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mini_cash/data/style/style.dart';
+import 'package:mini_cash/data/style/widgets/text_controller_widget.dart';
 import 'package:mini_cash/domain/sign_up/data/repository/request/sign_up_request.dart';
 import 'package:mini_cash/domain/sign_up/presentation/controller/sign_up_cotroller.dart';
 import 'package:mini_cash/presentation/providers/account_provider.dart';
@@ -121,7 +122,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
         key: _formKey,
         child: ListView(
           children: [
-            SignUpTextField(
+            TextControllerWidget(
               controller: _nameController,
               label: 'Name',
               icon: Icons.person,
@@ -129,7 +130,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
                   v == null || v.isEmpty ? 'Please enter your name' : null,
             ),
             const SizedBox(height: kMedium),
-            SignUpTextField(
+            TextControllerWidget(
               controller: _emailController,
               label: 'Email',
               icon: Icons.email,
@@ -143,7 +144,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            SignUpTextField(
+            TextControllerWidget(
               controller: _passwordController,
               label: 'Password',
               icon: Icons.lock,
@@ -157,7 +158,7 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            SignUpTextField(
+            TextControllerWidget(
               controller: _confirmPasswordController,
               label: 'Confirm Password',
               icon: Icons.lock,
@@ -234,36 +235,4 @@ class _SignUpScreenState extends ConsumerState<SignUpPresentation> {
 
 extension on String {
   String get hardcoded => toUpperCase();
-}
-class SignUpTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final bool obscure;
-  final String? Function(String?)? validator;
-
-  const SignUpTextField({
-    super.key,
-    required this.controller,
-    required this.label,
-    required this.icon,
-    this.obscure = false,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label.hardcoded,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
-        ),
-        prefixIcon: Icon(icon),
-      ),
-    );
-  }
 }

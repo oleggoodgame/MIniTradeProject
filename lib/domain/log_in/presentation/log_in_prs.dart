@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mini_cash/data/style/style.dart';
+import 'package:mini_cash/data/style/widgets/text_controller_widget.dart';
 import 'package:mini_cash/domain/log_in/data/repository/request/log_in_request.dart';
 import 'package:mini_cash/domain/log_in/presentation/controller/log_in_controller.dart';
 import 'package:mini_cash/domain/log_in/presentation/state/log_in_state.dart';
@@ -69,7 +70,7 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
         key: _formKey,
         child: ListView(
           children: [
-            AuthTextField(
+            TextControllerWidget(
               controller: _emailController,
               label: 'Email',
               icon: Icons.email,
@@ -83,7 +84,7 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
               },
             ),
             const SizedBox(height: kMedium),
-            AuthTextField(
+            TextControllerWidget(
               controller: _passwordController,
               label: 'Password',
               icon: Icons.lock,
@@ -134,35 +135,4 @@ class _LogInScreenState extends ConsumerState<LogInPresentation> {
   }
 }
 
-class AuthTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final bool obscure;
-  final String? Function(String?)? validator;
 
-  const AuthTextField({
-    super.key,
-    required this.controller,
-    required this.label,
-    required this.icon,
-    this.obscure = false,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(kSmall)),
-        ),
-        prefixIcon: Icon(icon),
-      ),
-    );
-  }
-}

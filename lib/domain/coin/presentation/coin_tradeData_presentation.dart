@@ -58,7 +58,7 @@ class _CoinTradePieChartState extends ConsumerState<CoinTradedataPresentation> {
                   ChartIndicator(color: Colors.red, text: 'Sell'),
                 ],
               ),
-              Expanded(child: TradeSummaryTable(buy: buy, sell: sell, total: data.volume)),
+              Expanded(child: TradeSummaryTable(buy: buy, sell: sell, total: buy-sell,)),
               SizedBox(height: 20,),
               const Text("All text that you see only working on 24 hour data receive"),
             ],
