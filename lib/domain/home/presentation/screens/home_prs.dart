@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mini_cash/data/style/widgets/favorite_widget.dart';
+import 'package:mini_cash/domain/favorites/provider/favorite_provider.dart';
 import 'package:mini_cash/domain/news/presentation/news_presentation.dart';
 
-class HomePresentation extends StatefulWidget {
+class HomePresentation extends ConsumerStatefulWidget {
   const HomePresentation({super.key});
 
   @override
-  State<HomePresentation> createState() => _HomePresentationState();
+  ConsumerState<HomePresentation> createState() => _HomePresentationState();
 }
 
-class _HomePresentationState extends State<HomePresentation> {
-  final List<String> topWatched = [
-    "Most watched #1",
-    "Most watched #2",
-    "Most watched #3",
-  ];
+class _HomePresentationState extends ConsumerState<HomePresentation> {
 
-  final List<String> savedNews = ["Saved #1", "Saved #2", "Saved #3"];
 
   @override
   Widget build(BuildContext context) {
+    final favorites = ref.watch(favoriteProvider);
     return Column(
       children: [
-        // ---------------- NEWS ----------------
         const Text(
-          "Список новин",
+          "List of news",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
@@ -31,52 +29,37 @@ class _HomePresentationState extends State<HomePresentation> {
         Expanded(child: const NewsPresentation(limit: 10)),
 
         const SizedBox(height: 32),
-
-        // // ---------------- TOP WATCHED ----------------
-        // const Text(
-        //   "Твої найбільше переглянуті за цей тиждень",
-        //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        // ),
-        // const SizedBox(height: 12),
-
-        // ...topWatched.map((e) => _topItem(e)),
-
-        // const SizedBox(height: 32),
-
-        // ---------------- SAVED ----------------
-        const Text(
-          "Три збережені",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            const Text(
+              "Favorite Coins",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            IconButton(onPressed: (){
+              context.pushNamed('favorites');
+            }, icon: const Icon(Icons.navigate_next_sharp))
+          ],
         ),
         const SizedBox(height: 12),
-
-        ...savedNews.map((e) => _savedItem(e)),
+        favorites.when(
+          data: (data) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                final coin = data[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: FavoriteCoinWidget(coin: coin),
+                );
+              },
+              itemCount: data.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            );
+          },
+          error: (er, _) => Center(child: Text(er.toString())),
+          loading: () => const Center(child: CircularProgressIndicator()),
+        ),
       ],
-    );
-  }
-
-  // ---------- Item Widgets -----------
-
-  Widget _newsItem(String text) {
-    return Card(
-      child: ListTile(title: Text(text), leading: const Icon(Icons.article)),
-    );
-  }
-
-  Widget _topItem(String text) {
-    return Card(
-      color: Colors.orange.shade50,
-      child: ListTile(
-        title: Text(text),
-        leading: const Icon(Icons.trending_up),
-      ),
-    );
-  }
-
-  Widget _savedItem(String text) {
-    return Card(
-      color: Colors.green.shade50,
-      child: ListTile(title: Text(text), leading: const Icon(Icons.bookmark)),
     );
   }
 }

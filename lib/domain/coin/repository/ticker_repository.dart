@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:mini_cash/domain/coin/repository/iticker_repository.dart';
 import 'package:mini_cash/entity/ticker_entity.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

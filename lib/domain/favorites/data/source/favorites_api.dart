@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mini_cash/data/database/firebase_database.dart';
-import 'package:mini_cash/domain/favorites/data/repository/request/favorite_request.dart';
 import 'package:mini_cash/domain/favorites/repository/ifavorite_repository.dart';
 import 'package:mini_cash/entity/coin_entity.dart';
 
@@ -18,10 +17,12 @@ class FavoritesApi implements IFavoriteRepository {
   @override
   Future<void> addFavorite(CoinEntity coin) async {
     return await _databaseService.updateFavoritesCoint(coin);
+    
   }
   
   @override
   Future<void> removeFavorite(CoinEntity coin) async {
-    return await _databaseService.removeFavoriteCoint(coin);
+   await _databaseService.removeFavoriteCoint(coin);
+   
   }
 }

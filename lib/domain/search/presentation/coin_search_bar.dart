@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mini_cash/data/database/firebase_database.dart';
+import 'package:mini_cash/domain/list_trade/provider/user_coin_provider.dart';
 import 'package:mini_cash/domain/search/provider/coin_search_provider.dart';
 
 class CoinSearchBar extends ConsumerStatefulWidget {
@@ -21,7 +23,7 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
     controller = TextEditingController();
 
     controller.addListener(() {
-      setState(() {}); 
+      setState(() {});
     });
   }
 
@@ -37,13 +39,10 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
     final search = controller.text;
 
     final results = ref.watch(coinSearchProvider(search));
-    // print(results.value);
     return Stack(
       children: [
-        // Тло (можеш додати фон)
         Positioned.fill(child: Container(color: Colors.grey[100])),
 
-        // Поле пошуку зверху
         Positioned(
           top: 50,
           left: 16,
@@ -68,10 +67,9 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
           ),
         ),
 
-        // Список результатів
         if (focusNode.hasFocus && search.isNotEmpty)
           Positioned(
-            top: 110, // рівно під полем
+            top: 110,
             left: 16,
             right: 16,
             bottom: 16,
@@ -83,7 +81,7 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
                   loading: () => Center(child: CircularProgressIndicator()),
                   error: (e, _) => Center(child: Text('Error')),
                   data: (coins) => ListView.builder(
-                    padding: EdgeInsets.zero, // прибираємо внутрішній padding
+                    padding: EdgeInsets.zero,
                     itemCount: coins.length,
                     itemBuilder: (context, i) {
                       final coin = coins[i];
@@ -100,38 +98,27 @@ class _CoinSearchBarState extends ConsumerState<CoinSearchBar> {
                             await ref
                                 .read(firebaseDatabaseProvider)
                                 .updateProfileCoint(coin);
+                            ref.invalidate(userCoinsProvider);
                             if (!mounted) return;
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: Text("Успішно"),
-                                content: Text(
-                                  "${coin.baseAsset} додано до списку",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text("Ок"),
-                                  ),
-                                ],
-                              ),
-                            );
+                            context.go('/list_trade');
+
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (_) => AlertDialog(
+                            //     title: Text("Успішно"),
+                            //     content: Text(
+                            //       "${coin.baseAsset} додано до списку",
+                            //     ),
+                            //     actions: [
+                            //       TextButton(
+                            //         onPressed: () => Navigator.pop(context),
+                            //         child: Text("Ок"),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // );
                           } catch (e) {
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: Text("Успішно"),
-                                content: Text(
-                                  "${coin.baseAsset} додано до списку",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text("Ок"),
-                                  ),
-                                ],
-                              ),
-                            );
+                            print(e);
                           }
                         },
                       );

@@ -42,40 +42,47 @@ class _CoinScreenState extends ConsumerState<CoinScreen> {
         appBar: AppBar(
           title: Text(symbol),
           actions: [
-            ref.watch(favoriteProvider).when(
-              data: (favorites) {
-                final isFavorite = favorites.any((c) => c.symbol == symbol);
+            ref
+                .watch(favoriteProvider)
+                .when(
+                  data: (favorites) {
+                    final fifi = favorites.any((c) => c.symbol == symbol);
 
-                return IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : null,
-                  ),
-                  onPressed: () async {
-                    final favoriteApi = ref.read(favoritesApiProvider);
-                    try {
-                      if (isFavorite) {
-                        await favoriteApi.removeFavorite(coin); // передаємо CoinEntity
-                      } else {
-                        await favoriteApi.addFavorite(coin); // передаємо CoinEntity
-                      }
-                      // ref.refresh(favoriteProvider);
-                    } catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error: $e')),
-                        );
-                      }
-                    }
+                    return IconButton(
+                      icon: Icon(
+                        fifi ? Icons.favorite : Icons.favorite_border,
+                        color: fifi ? Colors.red : null,
+                      ),
+                      onPressed: () async {
+                        final favoriteApi = ref.read(favoritesApiProvider);
+                        try {
+                          if (fifi) {
+                            await favoriteApi.removeFavorite(
+                              coin,
+                            ); 
+                          } else {
+                            await favoriteApi.addFavorite(
+                              coin,
+                            ); 
+                          }
+                          // ref.invalidate(favoriteProvider);
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error: $e')),
+                            );
+                          }
+                        }
+                      },
+                    );
                   },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => IconButton(
-                icon: const Icon(Icons.error),
-                onPressed: null,
-              ),
-            ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => IconButton(
+                    icon: const Icon(Icons.error),
+                    onPressed: null,
+                  ),
+                ),
           ],
           bottom: const TabBar(
             tabs: [

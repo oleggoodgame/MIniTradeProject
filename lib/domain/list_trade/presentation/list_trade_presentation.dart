@@ -18,6 +18,8 @@ class ListTradePresentation extends ConsumerWidget {
             .init(coins.map((c) => c.symbol).toList());
       }
     });
+    ref.invalidate(userCoinsProvider);
+    ref.invalidate(pricesProvider);
 
     final coinsAsync = ref.watch(userCoinsProvider);
     final pricesAsync = ref.watch(pricesProvider);
@@ -45,10 +47,7 @@ class ListTradePresentation extends ConsumerWidget {
                         : "Loading...",
                   ),
                   onTap: () {
-                    context.pushNamed(
-                      'coin',
-                      extra: coin,
-                    ); 
+                    context.pushNamed('coin', extra: coin);
                   },
                 );
               },

@@ -10,6 +10,7 @@ final coinsRepositoryProvider = Provider<CoinsRepository>((ref) {
     remote: CoinsRemoteDataSource(),
   );
 });
+
 class CoinsRepositoryImpl implements CoinsRepository {
   final CoinsLocalDataSource local;
   final CoinsRemoteDataSource remote;
