@@ -17,7 +17,7 @@ class Counter extends _$Counter {
     state = [...state, newSpot];
 
     if (state.length > 100) {
-      state = state.sublist(state.length - 50);
+      state = state.sublist(state.length - 2);
     }
   }
 

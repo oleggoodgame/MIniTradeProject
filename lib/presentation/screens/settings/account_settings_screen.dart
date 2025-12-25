@@ -107,8 +107,19 @@ class ThemeSwitch extends ConsumerWidget {
       inactiveThumbColor: Colors.grey.shade300,
       inactiveTrackColor: Colors.grey.shade400,
       onChanged: (_) {
-        // Перемикаємо тему
-        ref.read(themeControllerProvider.notifier).toggleTheme();
+        if (isDark) {
+          ref
+              .read(themeControllerProvider.notifier)
+              .setTheme(
+                AppThemeMode.light,
+              );
+          return;
+        }
+        ref
+            .read(themeControllerProvider.notifier)
+            .setTheme(
+              AppThemeMode.dark,
+            ); // Тут можна додати логіку для перемикання між режимами
       },
     );
   }

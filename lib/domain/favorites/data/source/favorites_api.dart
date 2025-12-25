@@ -16,7 +16,8 @@ class FavoritesApi implements IFavoriteRepository {
 
   @override
   Future<void> addFavorite(CoinEntity coin) async {
-    return await _databaseService.updateFavoritesCoint(coin);
+     await _databaseService.updateFavoritesCoint(coin);
+     
     
   }
   

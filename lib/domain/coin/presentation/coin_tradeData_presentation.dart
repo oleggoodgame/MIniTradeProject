@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mini_cash/data/style/style.dart';
 import 'package:mini_cash/domain/coin/model/coin_trade_data.dart';
 import 'package:mini_cash/domain/coin/presentation/f_chart/chart_indicator.dart';
 import 'package:mini_cash/domain/coin/repository/coin_trade_data.dart';
@@ -46,7 +47,6 @@ class _CoinTradePieChartState extends ConsumerState<CoinTradedataPresentation> {
                   buy: buy,
                   sell: sell,
                   touchedIndex: touchedIndex,
-                  onTouch: (i) => setState(() => touchedIndex = i),
                 ),
               ),
               Row(
@@ -54,13 +54,23 @@ class _CoinTradePieChartState extends ConsumerState<CoinTradedataPresentation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   ChartIndicator(color: Colors.blue, text: 'Buy'),
-                  SizedBox(width: 6),
+                  SizedBox(width: kSmall),
                   ChartIndicator(color: Colors.red, text: 'Sell'),
                 ],
               ),
-              Expanded(child: TradeSummaryTable(buy: buy, sell: sell, total: buy-sell,)),
-              SizedBox(height: 20,),
-              const Text("All text that you see only working on 24 hour data receive"),
+              Expanded(
+                child: TradeSummaryTable(
+                  buy: buy,
+                  sell: sell,
+                  total: buy - sell,
+                ),
+              ),
+              SizedBox(height: kLarge),
+              Text(
+                "All text that you see only working on 24 hour data receive",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              SizedBox(height: kLarge),
             ],
           ),
         );
@@ -80,8 +90,8 @@ class ChartIndicator extends StatelessWidget {
     return Row(
       children: [
         Container(width: 12, height: 12, color: color),
-        const SizedBox(width: 8),
-        Text(text),
+        const SizedBox(width: kSmall),
+        Text(text, style: Theme.of(context).textTheme.bodyMedium),
       ],
     );
   }
@@ -104,14 +114,14 @@ class TradeSummaryTable extends StatelessWidget {
     return Table(
       border: TableBorder.all(
         color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
       ),
       columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3)},
       children: [
-        _row('Тип', 'Значення', isHeader: true),
-        _row('Купівля', buy.toStringAsFixed(2)),
-        _row('Продаж', sell.toStringAsFixed(2)),
-        _row('Надходження', total.toStringAsFixed(2)),
+        _row('Type', 'Value', isHeader: true),
+        _row('Buy (coin amount)', buy.toStringAsFixed(2)),
+        _row('Sell (coin amount)', sell.toStringAsFixed(2)),
+        _row('Total (coin amount)', total.toStringAsFixed(2)),
       ],
     );
   }
@@ -124,11 +134,11 @@ class TradeSummaryTable extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(pMedium),
           child: Text(left, style: style),
         ),
         Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(pMedium),
           child: Text(right, style: style),
         ),
       ],

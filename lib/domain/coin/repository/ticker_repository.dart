@@ -6,7 +6,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 final tickerStreamProvider =
     StreamNotifierProvider.family<TickerStreamNotifier, TickerEntity, String>(
-      (symbol) => TickerStreamNotifier(symbol: 'BTCUSDT'),
+      (symbol) => TickerStreamNotifier(symbol: symbol),
     );
 
 class TickerStreamNotifier extends StreamNotifier<TickerEntity> {

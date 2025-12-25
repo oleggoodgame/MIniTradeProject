@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mini_cash/data/database/theme_database.dart';
 import 'package:mini_cash/domain/favorites/data/source/favorites_api.dart';
+import 'package:mini_cash/domain/favorites/presentation/state/favorite_state.dart';
 import 'package:mini_cash/entity/coin_entity.dart';
 
 class FavoriteCoinWidget extends ConsumerWidget {
@@ -10,6 +12,7 @@ class FavoriteCoinWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final fifi = ref.read(themeControllerProvider) == AppThemeMode.dark;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -27,7 +30,7 @@ class FavoriteCoinWidget extends ConsumerWidget {
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: fifi ? Colors.grey.shade800 : Colors.grey.shade200,
             child: Text(
               coin.symbol.substring(0, 1),
               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -58,14 +61,12 @@ class FavoriteCoinWidget extends ConsumerWidget {
             icon: const Icon(Icons.favorite, color: Colors.red),
             onPressed: () async {
               try {
-                await ref
-                    .read(favoritesApiProvider)
-                    .removeFavorite(coin);
-            
+                await ref.read(favoritesApiProvider).removeFavorite(coin);
+                ref.invalidate(favoriteProvider);
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: $e')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Error: $e')));
               }
             },
           ),

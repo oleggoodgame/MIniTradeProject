@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mini_cash/data/style/style.dart';
 import 'package:mini_cash/domain/reset_password/data/repository/request/reset_password_request.dart';
 import 'package:mini_cash/domain/reset_password/repository/reset_password_repository.dart';
 import 'package:mini_cash/data/style/widgets/text_controller_widget.dart';
@@ -95,12 +96,11 @@ class _ResetPasswordPresentationState
       key: _formKey,
       child: Column(
         children: [
-          const Text(
+           Text(
             'Enter your old password and new password',
-            style: TextStyle(fontSize: 16),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-          const SizedBox(height: 16),
-
+          const SizedBox(height: kMedium),
           TextControllerWidget(
             controller: _oldPasswordController,
             label: 'Old password',
@@ -111,7 +111,7 @@ class _ResetPasswordPresentationState
                 value == null || value.isEmpty ? 'Enter old password' : null,
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: kMedium),
 
           TextControllerWidget(
             controller: _newPasswordController,
@@ -125,7 +125,7 @@ class _ResetPasswordPresentationState
                     : null,
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: kLarge),
 
           ElevatedButton(
             onPressed: _loading ? null : _onChangePassword,

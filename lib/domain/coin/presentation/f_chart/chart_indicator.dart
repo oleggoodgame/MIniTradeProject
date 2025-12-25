@@ -5,14 +5,12 @@ class TradePieChart extends StatelessWidget {
   final double buy;
   final double sell;
   final int touchedIndex;
-  final ValueChanged<int> onTouch;
 
   const TradePieChart({
     super.key,
     required this.buy,
     required this.sell,
     required this.touchedIndex,
-    required this.onTouch,
   });
 
   @override
@@ -26,10 +24,9 @@ class TradePieChart extends StatelessWidget {
             if (!event.isInterestedForInteractions ||
                 response == null ||
                 response.touchedSection == null) {
-              onTouch(-1);
+              
               return;
             }
-            onTouch(response.touchedSection!.touchedSectionIndex);
           },
         ),
         borderData: FlBorderData(show: false),

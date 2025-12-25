@@ -14,9 +14,7 @@ class CoinTradeApi implements IcoinTradeData {
   @override
   Future<CoinTradeData> fetchTradeDataCoin(String symbol) async {
     final uri = Uri.parse('$_baseUrl?symbol=$symbol&interval=1d&limit=1');
-    print(uri);
     final response = await http.get(uri);
-    print(response);
     if (response.statusCode != 200) throw Exception('Binance API error');
 
     final decoded = jsonDecode(response.body) as List<dynamic>;

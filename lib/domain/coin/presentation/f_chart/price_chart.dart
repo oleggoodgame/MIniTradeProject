@@ -17,20 +17,40 @@ class PriceChart extends ConsumerWidget {
     final maxY = spots.isNotEmpty
         ? spots.map((e) => e.y).reduce(max) * 1.00005
         : 1.0;
-    return SizedBox(
-      height: 350,
-      child: LineChart(
-        LineChartData(
-          minY: minY,
-          maxY: maxY,
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              dotData: FlDotData(show: false),
-              barWidth: 2,
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: SizedBox(
+        height: 350,
+        child: LineChart(
+          LineChartData(
+            minY: minY,
+            maxY: maxY,
+            gridData: FlGridData(show: false),
+            clipData: FlClipData.all(),
+            titlesData: FlTitlesData(
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: true, reservedSize: 50),
+              ),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false, reservedSize: 60),
+              ),
+              topTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false, reservedSize: 60),
+              ),
             ),
-          ],
+            lineBarsData: [
+              LineChartBarData(
+                color: Colors.amber,
+                spots: spots,
+                isCurved: true,
+                dotData: FlDotData(show: false),
+                barWidth: 2,
+              ),
+            ],
+          ),
         ),
       ),
     );

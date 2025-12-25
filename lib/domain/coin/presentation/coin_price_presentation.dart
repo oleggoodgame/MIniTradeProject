@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mini_cash/data/style/style.dart';
 import 'package:mini_cash/domain/coin/presentation/f_chart/price_chart.dart';
 import 'package:mini_cash/domain/coin/provider/bid_ask_provider.dart';
 import 'package:mini_cash/domain/coin/provider/f_chart_provider.dart';
@@ -15,19 +16,16 @@ class CoinPricePresentation extends ConsumerStatefulWidget {
 }
 
 class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   ref.read(tickerRepositoryProvider.notifier).init("BTCUSDT");
-  // }
+  @override
+  void initState() {
+    // ref.invalidate(tickerStreamProvider(widget.symbol));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    tickerStreamProvider;
+    // ref.invalidate(tickerStreamProvider(widget.symbol));
     final tickerAsync = ref.watch(tickerStreamProvider(widget.symbol));
-    // final spots = ref.watch(counterProvider.notifier);
-    // final bid_ask = ref.watch(bidAskCounterProvider.notifier);
     ref.listen(tickerStreamProvider(widget.symbol), (previous, next) {
       next.whenOrNull(
         data: (ticker) {
@@ -47,7 +45,6 @@ class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
 
     return tickerAsync.when(
       data: (ticker) {
-        // spots.addPrice(ticker.lastPrice);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -58,8 +55,21 @@ class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Price: ${ticker.lastPrice}"),
-                      Text("${ticker.priceChangePercent}%"),
+                      Text(
+                        "Price: ${ticker.lastPrice}",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      ticker.priceChangePercent.toString().startsWith('-')
+                          ? Text(
+                              "${ticker.priceChangePercent}%",
+                              style: Theme.of(context).textTheme.titleMedium!
+                                  .copyWith(color: Colors.red),
+                            )
+                          : Text(
+                              "${ticker.priceChangePercent}%",
+                              style: Theme.of(context).textTheme.titleMedium!
+                                  .copyWith(color: Colors.green),
+                            ),
                     ],
                   ),
                 ),
@@ -67,15 +77,31 @@ class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Max. price in 24 hours: ${ticker.highPrice}"),
-                      Text("Low. price in 24 hours: ${ticker.lowPrice}"),
+                      Text(
+                        "Max. price in 24 hours: ${ticker.highPrice}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        "Low. price in 24 hours: ${ticker.lowPrice}",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
             PriceChart(),
-            Text(""),
+            Center(
+              child: Text(
+                "All you see only working on 24 hour data receive, and after new price data about coin",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const SizedBox(height: kMedium),
+            Text(
+              "Bid / Ask counter:",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Expanded(
               child: Consumer(
                 builder: (context, ref, _) {
@@ -92,10 +118,46 @@ class _CoinPricePresentationState extends ConsumerState<CoinPricePresentation> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text("${bid.key}  ${bid.value}"),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${bid.key}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "${bid.value} ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              // child: Text("${bid.key}  ${bid.value}"),
                             ), // тут поміняти треба буде
                             Expanded(
-                              child: Text("${ask.key}  ${ask.value}"),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    " ${ask.key}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "${ask.value}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                              // child: Text("${ask.key}  ${ask.value}"),
                             ), // тут поміняти треба буде
                           ],
                         ),

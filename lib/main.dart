@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mini_cash/data/database/theme_database.dart';
+import 'package:mini_cash/data/style/dark_style.dart';
+import 'package:mini_cash/data/style/light_style.dart';
 import 'package:mini_cash/domain/search/data/databaselocal_data.dart';
 import 'package:mini_cash/domain/search/data/databaseremote_data.dart';
 import 'package:mini_cash/domain/search/repository/search_repository.dart';
@@ -9,8 +12,6 @@ import 'package:mini_cash/navigation/go_route.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mini_cash/presentation/providers/account_provider.dart';
-import 'package:mini_cash/websocket/binance_prices_websokcet.dart';
-// import 'dart:collection';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -109,15 +110,31 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
+    final themeState = ref.watch(themeControllerProvider);
 
-    return MaterialApp.router(routerConfig: router);
+    if (themeState == AppThemeMode.loading) {
+      return const MaterialApp(
+        home: Scaffold(body: Center(child: CircularProgressIndicator())),
+      );
+    }
+
+    return MaterialApp.router(
+      routerConfig: router,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: _mapThemeMode(themeState),
+    );
   }
 
-  @override
-  void dispose() {
-    ref.read(pricesProvider.notifier).dispose();
-    // ref.read(priceStreamProvider.notifier).dispose();
-
-    super.dispose();
+  ThemeMode _mapThemeMode(AppThemeMode mode) {
+    switch (mode) {
+      case AppThemeMode.light:
+        return ThemeMode.light;
+      case AppThemeMode.dark:
+        return ThemeMode.dark;
+      case AppThemeMode.system:
+      default:
+        return ThemeMode.system;
+    }
   }
 }

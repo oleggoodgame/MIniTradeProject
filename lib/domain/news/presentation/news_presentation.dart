@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mini_cash/data/style/style.dart';
 import 'package:mini_cash/domain/news/model/news_model.dart';
 import 'package:mini_cash/domain/news/presentation/controller/news_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsPresentation extends ConsumerWidget {
-    final int limit;
+  final int limit;
 
   const NewsPresentation({super.key, required this.limit});
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(newsControllerProvider(limit));
@@ -43,7 +44,7 @@ class _NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(kMedium),
       onTap: () async {
         final uri = Uri.tryParse(news.homepageUrl);
 
@@ -52,32 +53,30 @@ class _NewsCard extends StatelessWidget {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.only(bottom: pMedium),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(kMedium),
+        ),
+        color: Theme.of(context).cardColor,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(pMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                news.title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
+              Text(news.title, style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: kSmall),
               Text(
                 news.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSmall),
               Row(
                 children: [
-                  if (news.publisherLogoUrl.isNotEmpty)
-                    SvgPicture.network(news.publisherLogoUrl, height: 24),
-                  const SizedBox(width: 8),
+                  _PublisherLogo(logoUrl: news.publisherLogoUrl),
+
+                  const SizedBox(width: kSmall),
                   Text(
                     news.publisher,
                     style: const TextStyle(color: Colors.grey),
@@ -89,5 +88,34 @@ class _NewsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _PublisherLogo extends StatelessWidget {
+  final String logoUrl;
+
+  const _PublisherLogo({required this.logoUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      if (logoUrl.isEmpty) return const SizedBox();
+
+      if (!logoUrl.toLowerCase().endsWith('.svg')) {
+        return Image.network(
+          logoUrl,
+          height: 24,
+          errorBuilder: (_, __, ___) => const SizedBox(),
+        );
+      }
+
+      return SvgPicture.network(
+        logoUrl,
+        height: 24,
+        placeholderBuilder: (_) => const SizedBox(height: 24, width: 24),
+      );
+    } catch (e) {
+      return const SizedBox();
+    }
   }
 }

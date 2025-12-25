@@ -1,7 +1,1 @@
-1) coin_search_bar баг в showdialog, воно в кінцевому випадку не показує---------
-2) Не оновлюються коїни, в favoriteProvider, треба додати refresh, переглянути+
-3) кнопку натискання забув додати в favorite+
-4) Кнопку в favorites забув додати +
-5) баг в news, дивний баг+
-6) показати три збережені і потім хай пеейде на всві----------
-7) переглянути ще код---------
+Project: Mini_cash! You can track the price of coins, you have account settings, so you can say that this is a short MVP of Binance that I tried to make, I took Binance because it was approximately the logic that I would like to implement. Read more on the first screen

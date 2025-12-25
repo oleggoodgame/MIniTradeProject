@@ -40,11 +40,15 @@ class ListTradePresentation extends ConsumerWidget {
                 final price = prices[symbol];
 
                 return ListTile(
-                  title: Text(symbol),
+                  title: Text(
+                    symbol,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   subtitle: Text(
                     price != null
                         ? "Price: ${price.toStringAsFixed(4)}"
                         : "Loading...",
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   onTap: () {
                     context.pushNamed('coin', extra: coin);

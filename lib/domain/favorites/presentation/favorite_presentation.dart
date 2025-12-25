@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mini_cash/data/style/style.dart';
 import 'package:mini_cash/data/style/widgets/favorite_widget.dart';
 import 'package:mini_cash/domain/favorites/presentation/state/favorite_state.dart';
 
@@ -16,15 +17,18 @@ class FavoritePresentation extends ConsumerWidget {
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (favorites) {
         if (favorites.isEmpty) {
-          return const Center(
-            child: Text('No favorites yet ❤️', style: TextStyle(fontSize: 16)),
+          return Center(
+            child: Text(
+              'No favorites yet ❤️',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           );
         }
 
         return ListView.separated(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(kMedium),
           itemCount: favorites.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, __) => const SizedBox(height: kMedium),
           itemBuilder: (context, index) {
             final coin = favorites[index];
             return InkWell(
@@ -39,5 +43,3 @@ class FavoritePresentation extends ConsumerWidget {
     );
   }
 }
-
-
