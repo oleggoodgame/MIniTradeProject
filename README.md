@@ -1,4 +1,5 @@
 Project: Mini_cash! You can track the price of coins, you have account settings, so you can say that this is a short MVP of Binance that I tried to make, I took Binance because it was approximately the logic that I would like to implement. Read more on the first screen
+This is the first time I've tried Clean Architecture!I had done it before, but not on such a scale, and I liked to be lazy
 <img width="370" height="759" alt="image" src="https://github.com/user-attachments/assets/8b13b7ca-ceed-4b63-af79-5e07a0e04de0" />
 <img width="427" height="742" alt="image" src="https://github.com/user-attachments/assets/12b7a2ca-90df-4bc1-859f-954e19b57ce9" />
 <img width="403" height="752" alt="image" src="https://github.com/user-attachments/assets/b0c3fe52-8a7b-4fef-bc44-7858b7fe1b45" />
